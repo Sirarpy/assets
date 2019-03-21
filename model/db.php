@@ -24,6 +24,10 @@ class Db
         return mysqli_fetch_all($res);
     }
 
+    public function con(){
+        return $this->db;
+    }
+
 //    -------------------------registration function ------------------------------------
     public function checkReg($firstName, $lastName, $email, $password, $confirm)
     {
@@ -76,4 +80,17 @@ class Db
        return $this->query("SELECT * FROM `users` WHERE `email` = '$email' AND `password` = '$password'");
 
     }
+
+
+    public function connectQuery($page)
+    {
+        $res = mysqli_query($this->db, $page);
+        if (!$res) {
+            die(mysqli_error($this->db));
+        }
+        return $res;
+    }
+
+
+
 }

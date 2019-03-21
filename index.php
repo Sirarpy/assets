@@ -1,6 +1,4 @@
-<?php //session_start();
 
-?>
 <!DOCTYPE HTML>
 <html class="no-js" lang="en">
 
@@ -104,6 +102,11 @@
                 </div>
             </div>
             <div class="col-md-5">
+                <?php if (isset($_GET['sms'])) : ?>
+                    <p class="text-info">
+                        <?php echo $_GET['sms'] ?>;
+                    </p>
+                <?php endif; ?>
                 <div class="card">
                     <div class="card-header">Register</div>
                     <div class="card-body">
@@ -171,11 +174,6 @@
                                 <button type="submit" class="btn btn-primary btn-lg btn-block login-button" name="submit" value="regIn">
                                     Register
                                 </button>
-                                <?php if (isset($_GET['sms'])) : ?>
-                                        <p class="text-danger">
-                                            <?php echo $_GET['sms'] ?>;
-                                        </p>
-                                <?php endif; ?>
                             </div>
                         </form>
                     </div>

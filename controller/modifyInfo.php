@@ -1,92 +1,60 @@
 <?php
 include_once "../model/db.php";
 include_once "../model/functions.php";
-//include_once "../model/auth.php";
-//session_start();
-$db = new Db();
-//var_dump($_POST['fName']);
-//var_dump($func->test($_POST['fName']));
-//die();
-$fileType = $_FILES['picture']['type'];
+session_start();
 
-//var_dump($fileType); // image/png
-//die();
-$pictureType = $func->testString($fileType);
+    $db = new Db();
+    $fileType = $_FILES['picture']['type'];
 
+    $pictureType = $func->testString($fileType);
 
-$post = $_POST;
-$idOfUser = $post['id'];                               //OK
-$userName = $func->test($post['fName']);               //OK
-$userSurname = $func->test($post['lName']);            //OK
-$userPassword = $post['password'];                     //OK
-$userPicture = $idOfUser . '.' . $pictureType;         //Ok
+    $post = $_POST;
+    $idOfUser = $post['id'];
+    $userName = $func->test($post['fName']);
+    $userSurname = $func->test($post['lName']);
+    $userPassword = $post['password'];
+    $userPicture = $idOfUser . '.' . $pictureType;
 
-$db = new Db();
+    $db = new Db();
 
-//var_dump($user);
-//die();
-
-if (!empty($_FILES['picture']) && !empty($_FILES['picture']['name'])) {
-    if (0 < $_FILES['picture']['error']) {
-        echo 'Error: ' . $_FILES['picture']['error'] . '<br>';
+    if (!empty(trim($userPassword))) {
+        $update = $db->query(
+            "UPDATE users
+                      SET firstName = '{$userName}', 
+                      lastName = '{$userSurname}', 
+                      password = '{$userPassword}'
+                      WHERE id = '{$idOfUser}'"
+        );
     } else {
-
-        move_uploaded_file($_FILES['picture']['tmp_name'], "../public/images/user/$userPicture");
-
-        if(!empty($userPassword) && $userPassword !=''){
-            $update = $db->query(
-                "UPDATE `users`
-                          SET firstName = '$userName', 
-                          lastName = '$userSurname', 
-                          picture = '$userPicture', 
-                          password = '$userPassword'
-                          WHERE id = '$idOfUser'"
-            );
-        }else{
-            $update = $db->query(
-                "UPDATE `users`
-                          SET firstName = '$userName', 
-                          lastName = '$userSurname', 
-                          picture = '$userPicture'
-                          WHERE id = '$idOfUser'"
-            );
-        }
-        $_SESSION['user'][0]['picture'] = $userPicture;
+        $sql= "UPDATE users
+                      SET firstName = '{$userName}', 
+                      lastName = '{$userSurname}' 
+                      WHERE id = '{$idOfUser}'";
+        $update = $db->query($sql);
     }
-}
-else {
-    if (!empty($_FILES['picture']['error']) && !empty($_FILES['picture']['name'])) {
-        echo 'error';
-    }
-     else {
-        if (!empty($userPassword) && $userPassword != '') {
-            $update = $db->query(
-                "UPDATE `users`
-                          SET firstName = '$userName', 
-                          lastName = '$userSurname', 
-                          password = '$userPassword'
-                          WHERE id = '$idOfUser'"
-            );
 
-            $_SESSION['user'][0]['password'] = $userPassword;
-
+    if (!empty($_FILES['picture']) && !empty($_FILES['picture']['name'])) {
+        if (0 < $_FILES['picture']['error']) {
+            echo 'Error: ' . $_FILES['picture']['error'] . '<br>';
         } else {
+
+            move_uploaded_file($_FILES['picture']['tmp_name'], "../public/images/user/$userPicture");
+
             $update = $db->query(
-                "UPDATE `users`
-                          SET firstName = '$userName', 
-                          lastName = '$userSurname', 
-                          WHERE id = '$idOfUser'"
+                "UPDATE users
+                          SET picture = '{$userPicture}'
+                          WHERE id = '{$idOfUser}'"
             );
+            $_SESSION['user'][0][3] = $userPicture;
         }
-    };
-}
+    }
 
 
+$_SESSION['user'][0][1] = $userName;
+    $_SESSION['user'][0][2] = $userSurname;
+    if($userPassword != ''){
+        $_SESSION['user'][0][5] = $userPassword;
+    }
 
-$_SESSION['user'][0]['firstName'] = $userName;
-$_SESSION['user'][0]['lastName'] = $userSurname;
-
-//var_dump($_SESSION);
-//die();
 return true;
 ?>

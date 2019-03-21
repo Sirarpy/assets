@@ -16,7 +16,6 @@ class Functions
         $strsub = substr($str, 1);
         return $strsub;
     }
-
     public function dd($array,$die = false)
     {
         echo '<pre>';
@@ -30,29 +29,3 @@ class Functions
 }
 
 $func= new Functions();
-
-/*
-class man{
-
-    private $name = 'Narek';
-
-    public function __construct()
-    {
-        //echo 12;$man->name = '4545';
-
-    }
-
-    public function getName(){
-        echo $this->name;
-    }
-
-    public function setName($name){
-        $this->name = $name;
-    }
-
-}
-
-$man = new man();
-$man->getName();
-$man->setName('Sirarpi');
-$man->getName();*/

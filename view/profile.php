@@ -1,12 +1,12 @@
 <?php
 error_reporting(E_ALL);
-include_once "../model/db.php";
-include_once "../model/auth.php";
-
+require_once "../model/db.php";
+include_once "../model/functions.php";
+session_start();
 require "header.php";
+$db = new Db();
+$user = $_SESSION['user'][0];
 
-//var_dump($user[0][4]);
-//die();
 
 ?>
     <!-- menu area start here -->
@@ -32,80 +32,14 @@ require "header.php";
             <div class="row">
                 <div class="col-lg-6 col-md-12 ">
                     <div class="profile-img box-shadow">
-                        <img src="../public/images/user/<?= $user['picture']; ?>" alt="profile">
-                    </div>
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal">
-                        Modify user info
-                    </button>
-                    <div id="myModal" class="modal fade" style="z-index: 9999">
-                        <div class="modal-dialog">
-                            <!-- Modal content-->
-                            <div class="modal-content" style="padding: 15px;">
-                                <div class="modal-body">
-                                    <form class="form-horizontal" method="post" id="modifyInfo">
-                                        <div class="form-group">
-                                            <label for="fName" class="cols-sm-2 control-label">Your First Name</label>
-                                            <div class="cols-sm-8">
-                                                <div class="input-group"><span class="input-group-addon"><i
-                                                                class="fa fa-user fa"
-                                                                aria-hidden="true"></i></span>
-                                                    <input type="text" class="form-control" name="fName" id="fName"
-                                                           value="<?= $user['firstName']; ?>"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="lName" class="cols-sm-2 control-label">Your Last Name</label>
-                                            <div class="cols-sm-8">
-                                                <div class="input-group">
-                                                         <span class="input-group-addon"><i class="fa fa-users fa"
-                                                                                            aria-hidden="true"></i></span>
-                                                    <input type="text" class="form-control" name="lName"
-                                                           id="lName" value="<?= $user['lastName']; ?>"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="picture" class="cols-sm-2 control-label">Choose Picture</label>
-                                            <div class="cols-sm-8">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="fa fa-picture-o"
-                                                                                       aria-hidden="true"></i></span>
-                                                    <input type="file" class="form-control" id="picture" name="picture">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password" class="cols-sm-2 control-label">Change Password
-                                                (optional)</label>
-                                            <div class="cols-sm-8">
-                                                <div class="input-group"><span class="input-group-addon"><i
-                                                                class="fa fa-lock fa-lg"
-                                                                aria-hidden="true"></i></span>
-                                                    <input type="password" class="form-control" name="password"
-                                                           id="password"
-                                                           placeholder="Enter your Password"/>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary modify" data-dismiss="modal"
-                                                data-id="<?= $user[0]; ?>">Modify
-                                        </button>
-<!--                                        //?????????????????????????????????// [0]-->
-                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-                                            Close
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                        <img src="../public/images/user/<?= $user[3]; ?>" alt="profile">
                     </div>
                 </div>
 
                 <div class="col-lg-6 col-md-12">
                     <div class="profile-info">
                         <div class="profile-name">
-                            <h2><?= $user['firstName']; ?> <?= $user['lastName']; ?></h2>
+                            <h2><?= $user[1]; ?> <?= $user[2]; ?></h2>
                         </div>
                         <div class="profile-profason">
                             <h4>Professional Blogger</h4>
@@ -116,7 +50,7 @@ require "header.php";
                                 <tr>
                                     <td><span>Name</span></td>
                                     <td><b>:</b></td>
-                                    <td><?= $user['firstName']; ?></td>
+                                    <td><?= $user[1]; ?></td>
                                 </tr>
                                 <tr>
                                     <td><span>Date if Birth</span></td>
@@ -131,12 +65,87 @@ require "header.php";
                                 <tr>
                                     <td><span>Email</span></td>
                                     <td><b>:</b></td>
-                                    <td><a href="#"><?= $user[0][4]; ?></a></td>
+                                    <td><a href="#"><?= $user[4]; ?></a></td>
                                 </tr>
                                 <tr>
                                     <td><span>Website</span></td>
                                     <td><b>:</b></td>
                                     <td><a href="#">www.yourwebsite.com</a></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary">
+                                           <a href="../controller/logOutController.php" >Logout</a></td>
+                                        </button>
+                                    <td>/</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal">
+                                            Modify user info
+                                        </button>
+                                        <div id="myModal" class="modal fade" style="z-index: 9999">
+                                            <div class="modal-dialog">
+                                                <!-- Modal content-->
+                                                <div class="modal-content" style="padding: 15px;">
+                                                    <div class="modal-body">
+                                                        <form class="form-horizontal" method="post" id="modifyInfo">
+                                                            <div class="form-group">
+                                                                <label for="fName" class="cols-sm-2 control-label">Your First Name</label>
+                                                                <div class="cols-sm-8">
+                                                                    <div class="input-group"><span class="input-group-addon"><i
+                                                                                    class="fa fa-user fa"
+                                                                                    aria-hidden="true"></i></span>
+                                                                        <input type="text" class="form-control" name="fName" id="fName"
+                                                                               value="<?= $user[1]; ?>"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="lName" class="cols-sm-2 control-label">Your Last Name</label>
+                                                                <div class="cols-sm-8">
+                                                                    <div class="input-group">
+                                                         <span class="input-group-addon"><i class="fa fa-users fa"
+                                                                                            aria-hidden="true"></i></span>
+                                                                        <input type="text" class="form-control" name="lName"
+                                                                               id="lName" value="<?= $user[2]; ?>"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="picture" class="cols-sm-2 control-label">Choose Picture</label>
+                                                                <div class="cols-sm-8">
+                                                                    <div class="input-group">
+                                                    <span class="input-group-addon"><i class="fa fa-picture-o"
+                                                                                       aria-hidden="true"></i></span>
+                                                                        <input type="file" class="form-control" id="picture" name="picture">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="password" class="cols-sm-2 control-label">Change Password
+                                                                    (optional)</label>
+                                                                <div class="cols-sm-8">
+                                                                    <div class="input-group"><span class="input-group-addon"><i
+                                                                                    class="fa fa-lock fa-lg"
+                                                                                    aria-hidden="true"></i></span>
+                                                                        <input type="password" class="form-control" name="password"
+                                                                               id="password"
+                                                                               placeholder="Enter your Password"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary modify" data-dismiss="modal"
+                                                                    data-id="<?= $user[0]; ?>">Modify
+                                                            </button>
+                                                            <!--                                        //?????????????????????????????????// [0]-->
+                                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                                Close
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -208,10 +217,10 @@ require "header.php";
                             </div>
                             <div class="form-group">
                                 <label for="postPicture">Article Picture</label>
-                                <input type="file" class="form-control" id="postPicture"
+                                <input type="file"  id="postPicture"
                                        name="postPicture">
                             </div>
-                            <button type="button" class="btn btn-primary addNewPost" data-dismiss="modal">Add new Post
+                            <button type="button" class="btn btn-primary addNewPost">Add new Post
                             </button>
                         </form>
                     </div>
